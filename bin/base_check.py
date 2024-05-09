@@ -103,7 +103,7 @@ def generate_report(result):
     return report
 
 def generate_report_for_network(result, network):
-    report = f"## {network}\n\n"
+    report = f"## {network.capitalize()}\n\n"
     report += generate_report(result)
     return report
 
@@ -127,7 +127,7 @@ def main():
         "base-sepolia": "84532"
     }
 
-    report = "# Token Analysis Results\n\n"
+    report = "# Token Analysis Results[1][2]\n\n"
     for network, chain_id in token_networks.items():
         if network in data["tokens"]:
             address = data["tokens"][network]["address"]
@@ -138,9 +138,11 @@ def main():
             else:
                 print(f"Failed to analyze the token on {network}.")
 
-    if report.strip() == "# Token Analysis Results":
+    if report.strip() == "# Token Analysis Results[1][2]":
         print("No supported token networks found in the data.json file.")
     else:
+        report += "\n[1] https://docs.gopluslabs.io/reference/response-details\n"
+        report += "[2] https://docs.gopluslabs.io/reference/response-details-7\n"
         print(report.strip())
 
 if __name__ == "__main__":
