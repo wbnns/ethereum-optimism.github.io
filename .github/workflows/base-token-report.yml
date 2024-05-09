@@ -2,7 +2,7 @@ name: Base Token Report
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
     paths:
       - 'data/**/data.json'
 
