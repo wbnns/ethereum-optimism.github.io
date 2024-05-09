@@ -2,7 +2,7 @@ name: Base Token Report
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
     paths:
       - 'data/**/data.json'
 
@@ -31,10 +31,13 @@ jobs:
           report=$(python bin/base_check.py "$file")
           reports+="$report\n\n"
         done
-        echo "::set-output name=reports::$reports"
+        echo "reports<<EOF" >> $GITHUB_OUTPUT
+        echo "$reports" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
 
     - name: Add Analysis Results as PR Comment
       uses: actions/github-script@v6
+      if: steps.token_analysis.outputs.reports != ''
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
