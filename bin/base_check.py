@@ -1,14 +1,13 @@
 import json
 import os
 import sys
-from datetime import datetime
 from goplus.token import Token
 from goplus.rug_pull import RugPull
 
-def analyze_token(address, access_token, chain_id):
+def analyze_token(address, chain_id):
     try:
         # Analyze token security
-        token_data = Token(access_token=access_token).token_security(
+        token_data = Token().token_security(
             chain_id=chain_id, addresses=[address]
         )
 
@@ -29,8 +28,8 @@ def analyze_token(address, access_token, chain_id):
         print(f"Error occurred during analysis: {str(e)}")
         return None
 
-def generate_report(result, current_date):
-    report = f"### Report - {current_date}\n\n"
+def generate_report(result):
+    report = ""
 
     # Token Security Analysis Breakdown
     token_data = list(result["token_security"]["result"].values())
@@ -78,8 +77,6 @@ def generate_report(result, current_date):
             report += f"  - True Token Address: {fake_token['true_token_address']}\n"
         else:
             report += f"- Fake Token: Unknown\n"
-    else:
-        report += "No token security data available.\n"
 
     # Rug Pull Security Analysis Breakdown
     rug_pull_data = result["rug_pull_security"]["result"]
@@ -105,9 +102,9 @@ def generate_report(result, current_date):
 
     return report
 
-def generate_report_for_network(result, current_date, network):
-    report = f"## {network.capitalize()} Network\n\n"
-    report += generate_report(result, current_date)
+def generate_report_for_network(result, network):
+    report = f"## {network}\n\n"
+    report += generate_report(result)
     return report
 
 def main():
@@ -130,19 +127,16 @@ def main():
         "base-sepolia": "84532"
     }
 
-    access_token = os.environ.get("GOPLUS_API_KEY")
-    current_date = datetime.now().strftime("%Y-%m-%d")
-
     report = "# Token Analysis Results\n\n"
     for network, chain_id in token_networks.items():
         if network in data["tokens"]:
             address = data["tokens"][network]["address"]
-            result = analyze_token(address, access_token, chain_id)
+            result = analyze_token(address, chain_id)
             if result:
-                report += generate_report_for_network(result, current_date, network)
+                report += generate_report_for_network(result, network)
                 report += "\n"
             else:
-                print(f"Failed to analyze the token on {network} network.")
+                print(f"Failed to analyze the token on {network}.")
 
     if report.strip() == "# Token Analysis Results":
         print("No supported token networks found in the data.json file.")
