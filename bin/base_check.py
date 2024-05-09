@@ -141,7 +141,7 @@ def main():
     if report.strip() == "# Token Analysis Results":
         print("No supported token networks found in the data.json file.")
     else:
-        report += "\nReport definitions:"
+        report += "\nReport definitions:\n"
         report += "* https://docs.gopluslabs.io/reference/response-details\n"
         report += "* https://docs.gopluslabs.io/reference/response-details-7\n"
         print(report.strip())

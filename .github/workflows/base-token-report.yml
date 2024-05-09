@@ -26,8 +26,7 @@ jobs:
     - name: Get Modified Files
       id: modified_files
       run: |
-        git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
-        modified_files=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }} HEAD | grep 'data/.**/data.json')
+        modified_files=$(git diff --name-only --diff-filter=AM ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep 'data/.**/data.json')
         echo "::set-output name=files::$modified_files"
 
     - name: Run Token Analysis
