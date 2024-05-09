@@ -1,4 +1,4 @@
-name: Token Analysis CI
+name: Base Token Report
 
 on:
   pull_request:
