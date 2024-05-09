@@ -3,8 +3,6 @@ name: Base Token Report
 on:
   pull_request:
     branches: [ master ]
-    paths:
-      - 'data/**/data.json'
 
 jobs:
   build:
@@ -25,19 +23,20 @@ jobs:
         python -m pip install --upgrade pip
         pip install goplus
 
+    - name: Get Modified Files
+      id: modified_files
+      run: |
+        modified_files=$(git diff --name-only --diff-filter=AM ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep 'data/.**/data.json')
+        echo "::set-output name=files::$modified_files"
+
     - name: Run Token Analysis
       id: token_analysis
       run: |
         reports=""
-        modified_files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep 'data/.**/data.json')
-        if [ -z "$modified_files" ]; then
-          echo "No data.json files modified in this pull request."
-        else
-          for file in $modified_files; do
-            report=$(python bin/base_check.py "$file")
-            reports+="$report\n\n"
-          done
-        fi
+        for file in ${{ steps.modified_files.outputs.files }}; do
+          report=$(python bin/base_check.py "$file")
+          reports+="$report\n\n"
+        done
         echo "reports<<EOF" >> $GITHUB_OUTPUT
         echo "$reports" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
