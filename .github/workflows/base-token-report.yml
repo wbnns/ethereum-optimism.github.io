@@ -2,7 +2,7 @@ name: Base Token Report
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
     paths:
       - 'data/**/data.json'
 
@@ -12,6 +12,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -27,7 +29,7 @@ jobs:
       id: token_analysis
       run: |
         reports=""
-        for file in $(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep 'data/.**/data.json'); do
+        for file in $(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep 'data/.**/data.json'); do
           report=$(python bin/base_check.py "$file")
           reports+="$report\n\n"
         done
