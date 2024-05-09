@@ -1,4 +1,4 @@
-name: Base Token Report
+name: Superchain Token Report
 
 on:
   pull_request:
@@ -26,7 +26,7 @@ jobs:
     - name: Get Modified Files
       id: modified_files
       run: |
-        modified_files=$(git diff --name-only --diff-filter=AM ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep 'data/.**/data.json')
+        modified_files=$(git diff --name-only --diff-filter=AM ${{ github.event.pull_request.superchain.sha }} ${{ github.sha }} | grep 'data/.**/data.json')
         echo "::set-output name=files::$modified_files"
 
     - name: Run Token Analysis
@@ -35,7 +35,7 @@ jobs:
       run: |
         reports=""
         for file in ${{ steps.modified_files.outputs.files }}; do
-          report=$(python bin/base_check.py "$file")
+          report=$(python bin/superchain_check.py "$file")
           reports+="$report\n\n"
         done
         echo "reports<<EOF" >> $GITHUB_OUTPUT

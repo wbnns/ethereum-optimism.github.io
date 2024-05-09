@@ -121,10 +121,23 @@ def main():
         data = json.load(file)
 
     token_networks = {
-        "ethereum": "1",
-        "sepolia": "11155111",
         "base": "8453",
-        "base-sepolia": "84532"
+        "base-sepolia": "84532",
+        "ethereum": "1",
+        "lyra": "957",
+        "metal": "1750", 
+        "metal-sepolia": "1740",
+        "mode": "34443",
+        "mode-sepolia": "919",
+        "optimism": "10",
+        "optimism-sepolia": "11155420",
+        "orderly": "291",
+        "pgn": "424",
+        "pgn-sepolia": "58008",
+        "sepolia": "11155111",
+        "superlumio": "8866",
+        "zora": "7777777",
+        "zora-sepolia": "999999999"
     }
 
     report = "# Token Analysis Results\n\n"
